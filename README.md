@@ -25,3 +25,4 @@ Y88b  d88P 888 888 888 d88P 888 d88P      X88
                    888      888                                                   
                    888      888
 ```
+Decided to put together a selection of handy wordpress funtions that I use for my projects.

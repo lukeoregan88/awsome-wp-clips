@@ -1,0 +1,82 @@
+Amazing things to do with htaccess in WordPress
+
+The default contents of a .htaccess file in a WordPress website is this:
+
+    # BEGIN WordPress
+    <IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    RewriteRule ^index\.php$ - [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.php [L]
+    </IfModule>
+    # END WordPress
+
+**Redirecting Between ‘www’ and ‘non-www’**
+
+\- redirect the www domain to the naked domain
+
+    RewriteEngine on
+    RewriteCond %{HTTP_HOST} ^www\.mycompanyname\.com [NC]
+    RewriteRule ^(.*)$ http://mycompanyname.com/$1 [L,R=301]
+
+\- redirect from a ‘non-www’ domain to ‘www’
+
+    RewriteEngine on
+    RewriteCond %{HTTP_HOST} ^mycompanyname.com [NC]
+    RewriteRule ^(.*)$ http://www.mycompanyname.com/$1 [R=301,L]
+
+**301 Redirect (permanent redirect)**
+
+permanently replace a URL with another
+
+    RewriteEngine on
+    RewriteCond %{HTTP_HOST} ^mycompanyname.com [NC,OR]
+    RewriteCond %{HTTP_HOST} ^www.mycompanyname.com [NC]
+    RewriteRule ^(.*)$ http://example.com/$1 [L,R=301,NC]
+
+**302 Redirect (temporary redirect)**
+
+This redirect is used when a content is temporarily moved to another location
+
+    RewriteEngine on
+    RewriteCond %{HTTP_HOST} ^mycompanyname.com [NC,OR]
+    RewriteCond %{HTTP_HOST} ^www.mycompanyname.com [NC]
+    RewriteRule ^(.*)$ http://example.com/$1 [L,R=301,NC]
+
+**Force to HTTPS**
+
+    RewriteEngine On
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+**Block IP Addresses**
+
+    Deny from 94.66.58.135
+
+**Prevent Image Hotlinking**
+
+Image hotlinking is where someone embeds an image on your website into their own. This can be problematic as it means your server is having to potentially work overtime to serve up image(s) on someone else’s website.
+
+    RewriteEngine on
+    RewriteCond %{HTTP_REFERER} !^$
+    RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?mycompanyname.com [NC]
+    RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?google.com [NC]
+    RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?yahoo.com [NC]
+    RewriteRule \.(jpg|jpeg|png|gif)$ - [F]
+
+**Disable XML-RPC Access**
+
+Your WordPress installation is receiving thousands of “POST /xmlrpc.php HTTP/1.1” requests ?
+
+Disable XML-RPC for your website add these lines of code to oyur .htaccess file
+
+    # Block WordPress xmlrpc.php requests
+    <Files xmlrpc.php>
+    order deny,allow
+    deny from all
+    </Files>
+    # END protect xmlrpc.php
+
+&#x200B;
